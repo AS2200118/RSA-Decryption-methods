@@ -1,0 +1,64 @@
+import time
+import math
+
+def extended_gcd(a, b):
+    # Initialize variables for the extended Euclidean algorithm
+    x0, x1, y0, y1 = 1, 0, 0, 1
+    # Initialize counter
+    counter = 0
+    # Start measuring runtime
+    start_time = time.time()
+    # Extended Euclidean algorithm
+    while b:
+        q, a, b = a // b, b, a % b
+        x0, x1 = x1, x0 - q * x1
+        y0, y1 = y1, y0 - q * y1
+        # Increment counter
+        counter += 1
+    # End measuring runtime
+    end_time = time.time()
+    runtime = end_time - start_time
+    # Return gcd, x, y, runtime, and counter
+    return a, x0, y0, runtime, counter
+
+def factorize(n):
+    # Start measuring runtime for factorization
+    start_time = time.time()
+    # Initialize counter
+    counter = 0
+    # Iterate over potential factors up to the square root of n
+    for i in range(2, math.isqrt(n) + 1):
+        # Increment counter
+        counter += 1
+        # Check if i is a factor of n
+        if n % i == 0:
+            # End measuring runtime for factorization
+            end_time = time.time()
+            runtime = end_time - start_time
+            # Return the factors, runtime, and counter
+            return i, n // i, runtime, counter
+    # If no factors found, return None
+    return None, None, None, counter
+
+def totient(p, q):
+    # Calculate Euler's totient function
+    return (p - 1) * (q - 1)
+
+# Given variables
+n = 1578631157
+e = 1174639909
+
+# Perform factorization and measure runtime
+p, q, runtime_factorize, counter_factorize = factorize(n)
+# Calculate totient(n) and perform extended Euclidean algorithm, then measure runtime
+totient_n = totient(p, q)
+gcd, x, y, runtime_extended_gcd, counter_extended_gcd = extended_gcd(e, totient_n)
+# Calculate private exponent d
+d = x % totient_n
+
+# Print results, runtimes, and counters
+print(f"The private exponent (d) is: {d}")
+print(f"Runtime for factorization: {runtime_factorize} seconds")
+print(f"Runtime for extended Euclidean algorithm: {runtime_extended_gcd} seconds")
+print(f"Counter for factorization: {counter_factorize}")
+print(f"Counter for extended Euclidean algorithm: {counter_extended_gcd}")
